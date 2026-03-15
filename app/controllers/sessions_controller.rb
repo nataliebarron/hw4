@@ -6,10 +6,7 @@ class SessionsController < ApplicationController
     @user = User.find_by({ "email" => params["email"] })
 
     if @user != nil
-      entered_password = params["password"]
-      real_password = BCrypt::Password.new(@user["password_digest"])
-
-      if real_password == entered_password
+      if BCrypt::Password.new(@user["password_digest"]) == params["password"]
         session["user_id"] = @user["id"]
         redirect_to "/"
         return
@@ -21,6 +18,6 @@ class SessionsController < ApplicationController
 
   def destroy
     session["user_id"] = nil
-    redirect_to "/"
+    redirect_to "/login"
   end
 end
